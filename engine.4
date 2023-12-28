@@ -1,0 +1,35 @@
+# Importing the necessary libraries
+import chess
+import chess.engine
+
+# Creating the chess board
+board = chess.Board()
+
+# Setting up the chess engine with Elo 2500
+engine = chess.engine.SimpleEngine.popen_uci("path_to_stockfish_engine")
+
+# Function to play the bot's move
+def play_bot_move():
+    result = engine.play(board, chess.engine.Limit(time=2.0))
+    board.push(result.move)
+
+# Function to play the user's move
+def play_user_move():
+    user_move = input("Enter your move: ")
+    try:
+        board.push_san(user_move)
+    except ValueError:
+        print("Invalid move. Try again.")
+
+# Main game loop
+while not board.is_game_over():
+    # Bot's turn
+    play_bot_move()
+    print("Bot's move:", board.san(board.peek()))
+    
+    # User's turn
+    play_user_move()
+    print("User's move:", board.san(board.peek()))
+
+# Closing the chess engine
+engine.quit()
